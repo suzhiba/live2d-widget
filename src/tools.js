@@ -8,6 +8,49 @@ import fa_xmark from "@fortawesome/fontawesome-free/svgs/solid/xmark.svg";
 
 import showMessage from "./message.js";
 
+async function postData(url = '', data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+
+function showHitokoto() {
+    // 增加 hitokoto.cn 的 API
+    var chat_text;
+    chat_text = document.getElementById('chat_text')
+    var user_key;
+    user_key = document.getElementById('user_key')
+    postData('http://43.155.172.242:62235/webchat', { "chat_text": chat_text, "user_key": user_key })
+      .then(data => data.json())
+      .then(result => {
+       showMessage(data.content, 6000, 9);
+       }
+      });
+}
+    //fetch("https://v1.hitokoto.cn")
+    //    .then(response => response.json())
+    //    .then(result => {
+    //        const text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
+    //        showMessage(result.hitokoto, 6000, 9);
+            //setTimeout(() => {
+            //    showMessage(text, 4000, 9);
+            //}, 6000);
+    //    });
+//}
+
 function showHitokoto() {
     // 增加 hitokoto.cn 的 API
     fetch("https://v1.hitokoto.cn")
@@ -20,7 +63,6 @@ function showHitokoto() {
             }, 6000);
         });
 }
-
 const tools = {
     "hitokoto": {
         icon: fa_comment,
